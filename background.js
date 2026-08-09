@@ -235,7 +235,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   return true;
 });
 
-const SUPABASE_URL = 'https://supabase.umutdogan.space';
+const SUPABASE_URL = 'https://promptcard.supabase.umutdogan.space';
 const BUILT_IN_API_URL = 'https://api.promptcard.umutdogan.space';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlzcyI6InN1cGFiYXNlIiwiaWF0IjoxNzg1MDY3Mjg4LCJleHAiOjE5NDI3NDcyODh9.9SurqvyAEXfIIm4qNODHJRn7BGStAYz9t8bHU3Zs_4k';
 

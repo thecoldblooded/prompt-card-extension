@@ -19,7 +19,7 @@
   ],
   "host_permissions": [
     "<all_urls>",
-    "https://supabase.umutdogan.space/*",
+    "https://promptcard.supabase.umutdogan.space/*",
     "https://api.promptcard.umutdogan.space/*"
   ],
   "background": {
