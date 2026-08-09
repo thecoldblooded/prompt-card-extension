@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0a0907">
+    <title>PromptCard — Welcome</title>
+    <link rel="stylesheet" href="welcome.css">
+</head>
+
+<body>
+    <a class="skip-link" href="#main" data-i18n="skip">Skip to onboarding</a>
+    <header class="welcome-header">
+        <a class="brand" href="index.html" aria-label="PromptCard home"><img class="brand-icon" src="icon-128.png"
+                alt="" width="32" height="32"><span>PROMPTCARD</span></a>
+        <label class="language-control"><span class="sr-only" data-i18n="languageLabel">Language</span><select
+                id="languageSelect">
+                <option value="tr">TR · Türkçe</option>
+                <option value="en">EN · English</option>
+                <option value="de">DE · Deutsch</option>
+                <option value="fr">FR · Français</option>
+                <option value="es">ES · Español</option>
+            </select></label>
+    </header>
+
+    <main id="main">
+        <section class="welcome-hero">
+            <div class="install-seal" aria-hidden="true"><span>✓</span><i></i></div>
+            <p class="kicker" data-i18n="installed">INSTALLATION CONFIRMED</p>
+            <h1 data-i18n="headline">Your visual shortcut is ready.</h1>
+            <p class="lede" data-i18n="lede">PromptCard now lives in your browser. Learn the three-move flow, then try
+                it safely below.</p>
+            <div class="confirmation" role="status"><span aria-hidden="true">●</span><span
+                    data-i18n="confirmation">PromptCard was added successfully</span></div>
+        </section>
+
+        <section class="onboarding" aria-labelledby="stepsTitle">
+            <div class="section-title">
+                <p>PC / QUICK START</p>
+                <h2 id="stepsTitle" data-i18n="stepsTitle">Three moves from image to prompt.</h2>
+            </div>
+            <ol class="step-list">
+                <li><span class="number">01</span>
+                    <div class="step-visual" aria-hidden="true"><span class="cursor">↖</span><span
+                            class="mini-image"></span></div>
+                    <div>
+                        <h3 data-i18n="stepOneTitle">Hover over an image</h3>
+                        <p data-i18n="stepOneText">On supported images, PromptCard places a small action in the
+                            upper-right corner.</p>
+                    </div>
+                </li>
+                <li><span class="number">02</span>
+                    <div class="step-visual" aria-hidden="true"><span class="mini-action">✦</span><span
+                            class="mouse">⌘</span></div>
+                    <div>
+                        <h3 data-i18n="stepTwoTitle">Choose Get Prompt</h3>
+                        <p data-i18n="stepTwoText">Click the action, or right-click the image and choose the PromptCard
+                            command.</p>
+                    </div>
+                </li>
+                <li><span class="number">03</span>
+                    <div class="step-visual" aria-hidden="true"><span class="lines">—<br>——<br>—</span><span
+                            class="copy">⧉</span></div>
+                    <div>
+                        <h3 data-i18n="stepThreeTitle">Review and copy</h3>
+                        <p data-i18n="stepThreeText">PromptCard returns structured creative language you can copy and
+                            refine.</p>
+                    </div>
+                </li>
+            </ol>
+        </section>
+
+        <section class="practice" aria-labelledby="practiceTitle">
+            <div class="practice-copy">
+                <p class="kicker" data-i18n="practiceKicker">NO API · NO CREDITS · JUST PRACTICE</p>
+                <h2 id="practiceTitle" data-i18n="practiceTitle">Try the gesture before the work begins.</h2>
+                <p data-i18n="practiceText">Move your pointer over the sample—or focus it with the keyboard—then choose
+                    Get Prompt. This is a local simulation only.</p>
+                <div class="safety-note"><span aria-hidden="true">◇</span><span data-i18n="safety">This example never
+                        uploads an image, calls an AI service, or uses credits.</span></div>
+            </div>
+
+            <div class="demo-frame" id="demoFrame">
+                <div class="demo-toolbar"><span>SIMULATION / LOCAL</span><span class="safe-dot"><i></i><span
+                            data-i18n="safe">SAFE</span></span></div>
+                <div class="sample" id="sample" tabindex="0" role="group" data-i18n-aria-label="sampleAria">
+                    <div class="sample-art" aria-hidden="true"><span class="arch"></span><span class="orb"></span><span
+                            class="figure"></span><span class="floor"></span></div>
+                    <button class="get-prompt" id="simulateButton" type="button"><span aria-hidden="true">✦</span><span
+                            data-i18n="getPrompt">Get Prompt</span></button>
+                    <div class="scan" aria-hidden="true"></div>
+                </div>
+                <div class="sim-result" id="simResult" aria-live="polite" hidden>
+                    <div><span data-i18n="simulatedResult">SIMULATED RESULT</span><span>0 <span
+                                data-i18n="credits">CREDITS</span></span></div>
+                    <p data-i18n="samplePrompt">Minimal architectural portrait beneath a monumental rust-colored arch,
+                        solitary figure, low afternoon sun, warm concrete texture, precise negative space, editorial
+                        stillness, 35mm perspective...</p>
+                    <button id="copySample" type="button" data-i18n="copy">Copy sample</button>
+                </div>
+            </div>
+        </section>
+
+        <section class="start-section">
+            <p>PC / SETUP COMPLETE</p>
+            <h2 data-i18n="startTitle">Ready when the next image appears.</h2>
+            <p data-i18n="startText">Pin PromptCard for easy access, then continue browsing and create from what catches
+                your eye.</p>
+            <button class="start-button" id="startButton" type="button"><span data-i18n="start">Start using
+                    PromptCard</span><span aria-hidden="true">→</span></button>
+            <span class="start-note" data-i18n="startNote">This tab will close when your browser allows it.</span>
+        </section>
+    </main>
+
+    <footer><span>PROMPTCARD</span><span data-i18n="footer">Installed. Local demo ready.</span></footer>
+    <script src="welcome.js"></script>
+</body>
+
+</html>

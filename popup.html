@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PromptCard AI</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+
+<body>
+  <div class="app-container">
+    <!-- Header -->
+    <header class="header">
+      <div class="brand">
+        <div class="brand-logo">
+          <img src="icon-128.png" alt="" width="28" height="28">
+        </div>
+        <div class="brand-info">
+          <span class="brand-title">PROMPTCARD</span>
+          <span class="brand-version">v<span id="appVersion">1.19.2</span> <span class="badge-omni">AI</span></span>
+        </div>
+      </div>
+      <div class="header-actions">
+        <label class="ui-language-control" for="uiLanguage" title="Application language">
+          <span aria-hidden="true">🌐</span>
+          <select id="uiLanguage" aria-label="Application language">
+            <option value="tr">TR</option>
+            <option value="en" selected>EN</option>
+            <option value="de">DE</option>
+            <option value="fr">FR</option>
+            <option value="es">ES</option>
+          </select>
+        </label>
+        <button id="btnSidePanel" class="icon-btn" title="Yan Panelde Aç (OTP girişi için önerilir)"
+          data-i18n-title="sidePanelTitle">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="18" height="18" rx="2" />
+            <line x1="15" y1="3" x2="15" y2="21" />
+          </svg>
+        </button>
+        <button id="btnHistory" class="icon-btn hidden" title="Geçmiş Analizler" data-i18n-title="historyTitle">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10" />
+            <polyline points="12 6 12 12 16 14" />
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Account / Status Bar -->
+    <div class="account-bar">
+      <span class="signed-in-label" data-i18n="userStatus">Kullanıcı / Durum</span>
+      <span id="accountName" class="signed-in-user">Custom API</span>
+    </div>
+
+    <!-- Mode Selector Tabs -->
+    <div class="mode-tabs">
+      <button class="mode-tab" id="tabBuiltIn" data-i18n="builtInService">Yerleşik Servis</button>
+      <button class="mode-tab active" id="tabCustomApi" data-i18n="customApi">Özel API</button>
+    </div>
+
+    <section class="preference-card" aria-labelledby="hoverPromptLabel">
+      <div class="preference-card__copy">
+        <span id="hoverPromptLabel" class="preference-card__title" data-i18n="hoverPromptTitle">Image hover
+          action</span>
+        <span id="hoverPromptDescription" class="preference-card__description" data-i18n="hoverPromptDescription">Show
+          Get Prompt on eligible images.</span>
+      </div>
+      <label class="toggle-switch" for="hoverPromptEnabled">
+        <input id="hoverPromptEnabled" type="checkbox" role="switch" aria-labelledby="hoverPromptLabel"
+          aria-describedby="hoverPromptDescription" checked>
+        <span class="toggle-switch__track" aria-hidden="true"><span class="toggle-switch__thumb"></span></span>
+      </label>
+    </section>
+
+    <!-- Views Container -->
+    <main class="content-view">
+      <!-- Welcome / registration gate -->
+      <section id="viewWelcome" class="view-panel active">
+        <h2 data-i18n="welcomeTitle">PromptCard’a Hoş Geldiniz</h2>
+        <p data-i18n="welcomeDescription">Devam etmek için önce kayıt olun veya giriş yapın.</p>
+        <button id="btnWelcomeEmail" class="btn-primary" data-i18n="registerEmail">Email ile kayıt ol</button>
+        <button id="btnWelcomeGoogle" class="btn-primary" data-i18n="continueGoogle">Google ile devam et</button>
+      </section>
+
+      <!-- Built-in account panel -->
+      <section id="viewBuiltIn" class="view-panel hidden">
+        <div id="authSignedOut">
+          <div class="field-group">
+            <label for="authEmail" data-i18n="email">Email</label>
+            <input type="email" id="authEmail" placeholder="you@example.com" autocomplete="email">
+          </div>
+          <div class="action-section">
+            <button id="btnSendOtp" class="btn-primary" data-i18n="sendOtp">Email OTP Gönder</button>
+          </div>
+          <div class="field-group hidden" id="otpGroup">
+            <label for="authOtp" data-i18n="otpCode">OTP Kodu</label>
+            <input type="text" id="authOtp" inputmode="numeric" autocomplete="one-time-code" spellcheck="false">
+          </div>
+          <div class="action-section hidden" id="otpAction">
+            <button id="btnVerifyOtp" class="btn-primary" data-i18n="signIn">Giriş Yap</button>
+          </div>
+          <div class="action-section">
+            <button id="btnGoogleAuth" class="btn-primary" data-i18n="continueGoogle">Google ile devam et</button>
+          </div>
+        </div>
+        <div id="authSignedIn" class="account-card hidden">
+          <div class="account-card-header">
+            <div class="account-avatar" aria-hidden="true">
+              <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20 21a8 8 0 0 0-16 0" />
+                <circle cx="12" cy="7" r="4" />
+              </svg>
+            </div>
+            <div class="account-identity">
+              <span class="account-eyebrow" data-i18n="activeAccount">Aktif hesap</span>
+              <strong id="authUserEmail"></strong>
+            </div>
+            <span class="account-status-dot" title="Oturum açık" data-i18n-title="sessionOpen"></span>
+          </div>
+
+          <div class="credit-card">
+            <div class="credit-card-copy">
+              <span class="credit-label" data-i18n="freeCredits">Built-in credits</span>
+              <span class="credit-description" data-i18n="creditDescription">Each built-in image analysis uses 1
+                credit.</span>
+            </div>
+            <div class="credit-balance" aria-live="polite">
+              <strong id="creditCount">-</strong>
+              <span data-i18n="creditsUnit">credits</span>
+            </div>
+            <div class="credit-progress" role="progressbar" aria-label="Remaining built-in credits"
+              data-i18n-aria-label="creditProgressLabel" aria-valuemin="0" aria-valuemax="300" aria-valuenow="0">
+              <span id="creditProgressBar"></span>
+            </div>
+            <div id="creditBreakdown" class="credit-breakdown hidden"></div>
+            <div class="credit-footer">
+              <span id="creditStatusText">Loading credit usage...</span>
+              <button id="btnRefreshCredits" class="credit-refresh-btn" type="button" title="Refresh credits"
+                data-i18n-title="refreshCreditsTitle">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M20 11a8.1 8.1 0 0 0-15.5-2M4 4v5h5" />
+                  <path d="M4 13a8.1 8.1 0 0 0 15.5 2M20 20v-5h-5" />
+                </svg>
+                <span data-i18n="refresh">Refresh</span>
+              </button>
+            </div>
+          </div>
+
+          <button id="btnShowBilling" class="billing-link" type="button">
+            <span class="billing-link__icon" aria-hidden="true">+</span>
+            <span class="billing-link__copy"><strong data-i18n="buyMoreCredits">Buy more credits</strong><small
+                data-i18n="billingTriggerHint">Choose a one-time pack or monthly plan</small></span>
+            <span class="billing-link__arrow" aria-hidden="true">›</span>
+          </button>
+          <section id="billingPanel" class="billing-panel hidden" aria-live="polite">
+            <div class="billing-heading">
+              <div><strong data-i18n="billingTitle">Get more built-in credits</strong><span
+                  data-i18n="billingSubtitle">Secure checkout by Lemon Squeezy</span></div>
+              <span class="test-badge" data-i18n="testMode">TEST MODE</span>
+            </div>
+            <div class="billing-section-label"><span data-i18n="oneTimePacks">One-time packs</span><small
+                data-i18n="creditsNeverExpire">Credits never expire</small></div>
+            <div class="billing-grid">
+              <article class="billing-offer"><em class="billing-offer__badge-placeholder" aria-hidden="true">&nbsp;</em>
+                <div class="billing-offer__top"><span class="billing-offer__amount"><strong>20</strong><small
+                      data-i18n="creditPack">credits</small></span><b>$5</b></div><span
+                  class="billing-offer__meta">$0.25 / credit</span><button type="button" data-offer="credits_20"
+                  data-i18n="buyNow">Buy now</button>
+              </article>
+              <article class="billing-offer"><em data-i18n="save20">Save 20%</em>
+                <div class="billing-offer__top"><span class="billing-offer__amount"><strong>50</strong><small
+                      data-i18n="creditPack">credits</small></span><b>$10</b></div><span
+                  class="billing-offer__meta">$0.20 / credit</span><button type="button" data-offer="credits_50"
+                  data-i18n="buyNow">Buy now</button>
+              </article>
+              <article class="billing-offer"><em data-i18n="save47">Save 47%</em>
+                <div class="billing-offer__top"><span class="billing-offer__amount"><strong>150</strong><small
+                      data-i18n="creditPack">credits</small></span><b>$20</b></div><span
+                  class="billing-offer__meta">~$0.13 / credit</span><button type="button" data-offer="credits_100"
+                  data-i18n="buyNow">Buy now</button>
+              </article>
+            </div>
+            <div class="billing-section-label billing-section-label--monthly"><span data-i18n="monthlyPlan">Monthly
+                plan</span><small data-i18n="forFrequentUse">For frequent use</small></div>
+            <article class="billing-offer billing-offer--featured">
+              <div class="billing-offer__featured-copy"><em data-i18n="bestValue">Best value · Save 75%</em><span
+                  class="billing-offer__amount"><strong>800</strong><small data-i18n="monthlyCredits">credits every
+                    month</small></span><small data-i18n="monthlyTerms">Resets monthly; unused credits do not roll
+                  over.</small></div>
+              <div class="billing-offer__featured-action"><b>$49.90<small>/mo</small></b><button type="button"
+                  data-offer="monthly_300" data-i18n="subscribe">Subscribe</button></div>
+            </article>
+            <p id="billingStatus" class="billing-status"></p>
+            <div class="billing-actions"><button id="btnCheckPayment" type="button" data-i18n="checkPayment">Refresh
+                payment status</button><button id="btnManageSubscription" class="hidden" type="button"
+                data-i18n="manageSubscription">Manage subscription</button></div>
+          </section>
+
+          <div class="built-in-guide">
+            <strong data-i18n="howToUse">Nasıl kullanılır?</strong>
+            <span data-i18n="usageGuide">Bir görsele sağ tıklayıp “PromptCard ile Analiz Et” seçeneğine basın.</span>
+          </div>
+          <button id="btnSignOut" class="account-signout-btn" data-i18n="signOut">Hesaptan çıkış yap</button>
+        </div>
+        <div id="authStatus" class="status-banner hidden"></div>
+      </section>
+
+      <!-- Settings Panel (Default) -->
+      <section id="viewSettings" class="view-panel active">
+
+        <div class="field-group">
+          <label for="baseUrl">Base URL</label>
+          <input type="text" id="baseUrl" placeholder="https://api.example.com/v1" value="">
+        </div>
+
+        <div class="field-group">
+          <label for="apiKey">API Key</label>
+          <div class="input-password-wrapper">
+            <input type="password" id="apiKey" placeholder="sk-..." value="">
+            <button id="btnToggleKey" class="toggle-pass-btn">👁️</button>
+          </div>
+        </div>
+
+        <div class="field-group">
+          <label for="modelName" data-i18n="model">Model</label>
+          <input type="text" id="modelName" placeholder="Model adını girin" data-i18n-placeholder="modelPlaceholder"
+            value="">
+          <div class="model-presets">
+            <span class="preset-chip" data-model="gpt-4o">gpt-4o</span>
+            <span class="preset-chip" data-model="agy/gemini-3.5-flash-medium">gemini-3.5</span>
+            <span class="preset-chip" data-model="github/claude-sonnet-5">claude-sonnet</span>
+          </div>
+        </div>
+
+        <div class="field-group">
+          <label for="targetLang" data-i18n="promptLanguage">Prompt Çıktı Dili</label>
+          <select id="targetLang" class="custom-select">
+            <option value="tr">Türkçe (TR)</option>
+            <option value="en" selected>English (EN)</option>
+            <option value="de">Deutsch (DE)</option>
+            <option value="fr">Français (FR)</option>
+            <option value="es">Español (ES)</option>
+          </select>
+        </div>
+
+        <div class="action-section">
+          <button id="btnTestApi" class="btn-primary">
+            <span id="testBtnText" data-i18n="testApi">Test local API</span>
+            <span id="testSpinner" class="spinner hidden"></span>
+          </button>
+        </div>
+
+        <!-- Status / Error Banner -->
+        <div id="statusBanner" class="status-banner hidden"></div>
+      </section>
+
+      <!-- History Panel -->
+      <section id="viewHistory" class="view-panel hidden">
+        <div class="history-header">
+          <h3 data-i18n="historyPrompts">Geçmiş Promptlar</h3>
+          <button id="btnClearHistory" class="text-btn" data-i18n="clear">Temizle</button>
+        </div>
+        <div id="historyList" class="history-list">
+          <div class="empty-history" data-i18n="emptyHistory">Henüz kaydedilmiş bir prompt kartı yok.</div>
+        </div>
+      </section>
+    </main>
+
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,6 @@
+.env
+.promptcard-webhook-secret.tmp
+client_secret_*.json
+*.zip
+*.tar.gz
+.DS_Store
