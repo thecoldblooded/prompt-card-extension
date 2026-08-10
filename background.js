@@ -241,7 +241,7 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5v
 
 function handleGoogleAuth() {
   const redirectUrl = chrome.identity.getRedirectURL();
-  const authUrl = `${SUPABASE_URL}/auth/v1/authorize?provider=google&redirect_to=${encodeURIComponent(redirectUrl)}`;
+  const authUrl = `${SUPABASE_URL}/auth/v1/authorize?provider=google&flow_type=implicit&redirect_to=${encodeURIComponent(redirectUrl)}`;
   console.log('[PromptCard Auth Log Background] Redirect URL:', redirectUrl);
   console.log('[PromptCard Auth Log Background] Auth URL:', authUrl);
 
@@ -271,8 +271,22 @@ function handleGoogleAuth() {
           queryParams = new URLSearchParams(queryString);
         }
 
-        const accessToken = hashParams.get('access_token') || queryParams.get('access_token');
-        const refreshToken = hashParams.get('refresh_token') || queryParams.get('refresh_token');
+        let accessToken = hashParams.get('access_token') || queryParams.get('access_token');
+        let refreshToken = hashParams.get('refresh_token') || queryParams.get('refresh_token');
+        const code = queryParams.get('code') || hashParams.get('code');
+
+        if ((!accessToken || !refreshToken) && code) {
+          const tokenRes = await fetch(`${SUPABASE_URL}/auth/v1/token?grant_type=pkce`, {
+            method: 'POST',
+            headers: { apikey: SUPABASE_ANON_KEY, 'Content-Type': 'application/json' },
+            body: JSON.stringify({ auth_code: code })
+          }).catch(() => null);
+          if (tokenRes && tokenRes.ok) {
+            const tokenData = await tokenRes.json();
+            accessToken = tokenData.access_token;
+            refreshToken = tokenData.refresh_token;
+          }
+        }
 
         if (!accessToken || !refreshToken) {
           throw new Error('OAuth yanıtından token alınamadı.');
