@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "PromptCard AI - Image to Prompt",
   "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAzc6eI4AR32N8VFuSQbYOj8heuOqIoA8Nsu9odQR83ETrvF9MfZ3hFh2ITFyjOYp5Mg9afV7S+VFyRmtJQ/w0Uipkbnj3BvRUSzDhzpE3QgZ132AY4z3xu4ftVfqHzJPtxNGpF62RhGL68QkJUYv9jlbOXguS6vDW7pQz4LchbBTMXRJE/y4LyrEuzCVrjmhMyeCjLvhuWDUoXW7iKzXRQrM/0VsyF2d9d7x1CiH0HLA7PpJaDUmCSYMEY6d1KdlJKGnVeRaR8DLRWJTcPWTzRZ+U7qSamzwBxu6IgAzzwRCOIFgUUyRxnQGq8W4hx6VZDEh0BcRGMn5ppoo1fI7uQwIDAQAB",
-  "version": "1.19.3",
+  "version": "1.19.4",
   "description": "Transform images and screen selections into detailed, high-fidelity AI prompts with built-in analysis or your own compatible API.",
   "icons": {
     "16": "icon-16.png",
