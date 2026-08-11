@@ -1,7 +1,13 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-SOURCE_URL="${DISPOSABLE_EMAIL_SOURCE_URL:-https://raw.githubusercontent.com/disposable-email-domains/disposable-email-domains/main/disposable_email_blocklist.conf}"
+SOURCES=(
+  "${DISPOSABLE_EMAIL_SOURCE_URL:-https://raw.githubusercontent.com/disposable-email-domains/disposable-email-domains/main/disposable_email_blocklist.conf}"
+  "https://raw.githubusercontent.com/disposable/disposable-email-domains/master/domains.txt"
+  "https://raw.githubusercontent.com/martenson/disposable-email-domains/master/disposable_email_blocklist.conf"
+  "https://raw.githubusercontent.com/wesbos/burn-email-providers/master/emails.txt"
+  "https://raw.githubusercontent.com/GeroldSetz/email-regex/master/disposable-email-domains.txt"
+)
 DB_CONTAINER="supabase-db"
 CONTAINER_FILE="/tmp/promptcard-disposable-email-domains.$$"
 LOCK_FILE="/var/lock/promptcard-disposable-email-sync.lock"
@@ -21,32 +27,30 @@ if ! flock -n 9; then
   exit 0
 fi
 
-curl --fail --silent --show-error --location --max-time 60 "$SOURCE_URL" --output "$RAW_FILE"
+for src in "${SOURCES[@]}"; do
+  curl --fail --silent --show-error --location --max-time 60 "$src" >> "$RAW_FILE" || true
+done
 
 awk '
-function invalid(message) {
-  print "Invalid disposable-email domain list: " message > "/dev/stderr"
-  exit 1
-}
 {
   sub(/\r$/, "")
   gsub(/^[[:space:]]+|[[:space:]]+$/, "")
-  if ($0 == "") next
+  if ($0 == "" || $0 ~ /^#/ || $0 ~ /^\/\//) next
 
   domain = tolower($0)
-  if (length(domain) > 253) invalid("domain exceeds 253 characters")
-  if (domain !~ /^[a-z0-9.-]+$/) invalid("unsupported character in " domain)
-  if (domain ~ /^\./ || domain ~ /\.$/ || domain ~ /\.\./) invalid("empty label in " domain)
+  if (length(domain) > 253) next
+  if (domain !~ /^[a-z0-9.-]+$/) next
+  if (domain ~ /^\./ || domain ~ /\.$/ || domain ~ /\.\./) next
 
   count = split(domain, labels, ".")
-  if (count < 2) invalid("domain needs at least two labels: " domain)
+  if (count < 2) next
+  valid = 1
   for (i = 1; i <= count; i++) {
     label = labels[i]
-    if (length(label) > 63) invalid("label exceeds 63 characters in " domain)
-    if (label !~ /^[a-z0-9]/ || label !~ /[a-z0-9]$/) invalid("label begins or ends with a hyphen in " domain)
+    if (length(label) > 63) { valid = 0; break }
+    if (label !~ /^[a-z0-9]/ || label !~ /[a-z0-9]$/) { valid = 0; break }
   }
-
-  print domain
+  if (valid) print domain
 }
 ' "$RAW_FILE" | LC_ALL=C sort -u > "$NORMALIZED_FILE"
 
