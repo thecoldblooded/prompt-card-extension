@@ -63,7 +63,7 @@ begin;
 create temporary table disposable_email_domains_staging (
   domain text primary key
 ) on commit drop;
-copy disposable_email_domains_staging (domain) from '$CONTAINER_FILE';
+\copy disposable_email_domains_staging (domain) from '$CONTAINER_FILE';
 do \$\$
 begin
   if (select count(*) from disposable_email_domains_staging) < 1000 then
