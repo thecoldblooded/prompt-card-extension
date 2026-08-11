@@ -372,6 +372,8 @@ document.addEventListener('DOMContentLoaded', () => {
     billingPanel.classList.toggle('billing-panel--required', credits === 0);
     if (credits === 0) billingPanel.classList.remove('hidden');
     btnManageSubscription.classList.toggle('hidden', !snapshot.subscription_status);
+    const testBadge = billingPanel.querySelector('.test-badge');
+    if (testBadge) testBadge.classList.toggle('hidden', snapshot.test_mode !== true);
     if (snapshot.billing_configured === false) {
       billingStatus.textContent = t('billingNotConfigured');
     } else if (snapshot.billing_configured === true && billingStatus.textContent === t('billingNotConfigured')) {

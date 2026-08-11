@@ -179,7 +179,7 @@ app.post('/v1/billing/checkout', async (req, res) => {
 app.get('/v1/billing/status', async (req, res) => {
   const user = await userFromRequest(req);
   if (!user) return res.status(401).json({ error: { message: 'Authentication required' } });
-  res.json({ ...(await creditSnapshot(user.id)), billing_configured: billingConfigured() });
+  res.json({ ...(await creditSnapshot(user.id)), billing_configured: billingConfigured(), test_mode: process.env.LEMONSQUEEZY_TEST_MODE !== 'false' });
 });
 
 app.get('/v1/billing/portal', async (req, res) => {
