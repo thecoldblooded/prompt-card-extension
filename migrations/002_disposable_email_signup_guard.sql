@@ -60,8 +60,8 @@ begin
 
   begin
     select status, content into reacher_res
-    from extensions.http_post(
-      'http://172.17.0.1:8085/v0/check_email',
+    from public.http_post(
+      'http://reacher:8080/v0/check_email',
       jsonb_build_object('to_email', email_address)::text,
       'application/json'
     );
