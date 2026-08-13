@@ -7,7 +7,7 @@
 **Transform images and screen selections into detailed, high-fidelity AI prompts.**
 
 [![Manifest V3](https://img.shields.io/badge/Manifest-V3-blue.svg)](https://developer.chrome.com/docs/extensions/mv3/intro/)
-[![Version](https://img.shields.io/badge/version-1.19.6-green.svg)](manifest.json)
+[![Version](https://img.shields.io/badge/version-1.19.7-green.svg)](manifest.json)
 [![License](https://img.shields.io/badge/license-MIT-orange.svg)](LICENSE)
 
 <img src="Store-marquee-1400x560.png" width="100%" alt="PromptCard AI Banner" />
